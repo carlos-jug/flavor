@@ -265,6 +265,14 @@ class ActiveRecord implements ArrayAccess {
 		return $rows;
 	}
 	
+	public function findAllOrderById($fields=NULL,$extra=NULL){
+		$return=array();
+		foreach($this->findAll($fields,NULL,NULL,$extra) as $key => $value){
+			$return[$value[$this->keyField]]=$value;
+		}
+		return $return;
+	}
+	
 	public function getPrimaryKey() {
 		return $this->keyField;
 	}
