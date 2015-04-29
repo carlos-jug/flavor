@@ -1,12 +1,31 @@
 <?php
+ /* ===========================
 
-class L10n extends Singleton {
+  FlavorPHP - because php should have a better taste
+  homepage: http://www.flavorphp.com/
+  git repository: https://github.com/Axloters/FlavorPHP
+
+  FlavorPHP is a free software licensed under the MIT license
+  Copyright (C) 2008 by Pedro Santana <contacto at pedrosantana dot mx>
+  
+  Team:
+  	Pedro Santana
+	Victor Bracco
+	Victor de la Rocha
+	Jorge CondomÃ­
+	Aaron Munguia
+
+  =========================== */
+?>
+<?php
+
+class l10n extends singleton {
 	
 	protected $gettext;
 	protected $input;
 	protected $language=NULL;
 	
-	public static function getInstance() {
+	public static function getInstance($class = null) {
 		return parent::getInstance(get_class());
 	}
 
@@ -120,7 +139,7 @@ class L10n extends Singleton {
 		if(is_array($lang)){
 			$country = strtolower($lang[1]);
 			switch($country){
-				//Aca una lista con los paises. No se como tendría que hacer para hacer insensible a mayusculas o minusculas: es-MX o es-mx ¿?
+				//Aca una lista con los paises. No se como tendrÃ­a que hacer para hacer insensible a mayusculas o minusculas: es-MX o es-mx Â¿?
 				case 'sa': $out .= " (". $this->__('Saudi Arabia'). ")"; break;
 				case 'iq': $out .= " (". $this->__('Iraq'). ")"; break;
 				case 'eg': $out .= " (". $this->__('Egypt'). ")"; break;
@@ -184,3 +203,4 @@ class L10n extends Singleton {
 		return $out;
 	}
 }
+?>

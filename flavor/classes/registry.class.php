@@ -1,18 +1,41 @@
 <?php
+ /* ===========================
 
-class Registry extends Singleton implements ArrayAccess {
+  FlavorPHP - because php should have a better taste
+  homepage: http://www.flavorphp.com/
+  git repository: https://github.com/Axloters/FlavorPHP
+
+  FlavorPHP is a free software licensed under the MIT license
+  Copyright (C) 2008 by Pedro Santana <contacto at pedrosantana dot mx>
+  
+  Team:
+  	Pedro Santana
+	Victor Bracco
+	Victor de la Rocha
+	Jorge Condom�
+	Aaron Munguia
+
+  =========================== */
+?>
+<?php
+
+class registry extends singleton implements ArrayAccess {
 
 	private $vars = array();
 
 	public function __construct() { }
 	
-	public static function getInstance() {
+	public static function getInstance($class = null) {
 		return parent::getInstance(get_class());
 	}
 	
 	public function __set($key, $value){
 		if (isset($this->vars[$key]) == true) {
-			throw new Exception("Unable to set var '".$key."'. Already set.");
+                        if ($key == "datos") {
+                            unset($this->vars[$key]);
+                        } else {
+                            throw new Exception("Unable to set var '".$key."'. Already set aaaa.");
+                        }
 		}
 
 		$this->vars[$key] = $value;
@@ -65,3 +88,4 @@ class Registry extends Singleton implements ArrayAccess {
 	}
 	
 }
+?>

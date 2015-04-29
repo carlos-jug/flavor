@@ -1,6 +1,24 @@
-<?php 
+<?php
+ /* ===========================
 
-class Router{
+  FlavorPHP - because php should have a better taste
+  homepage: http://www.flavorphp.com/
+  git repository: https://github.com/Axloters/FlavorPHP
+
+  FlavorPHP is a free software licensed under the MIT license
+  Copyright (C) 2008 by Pedro Santana <contacto at pedrosantana dot mx>
+  
+  Team:
+  	Pedro Santana
+	Victor Bracco
+	Victor de la Rocha
+	Jorge Condomí
+	Aaron Munguia
+
+  =========================== */
+?>
+<?php
+class router{
 	private $registry;
 	private $class = array(
 		'controller'=>'index',
@@ -16,39 +34,31 @@ class Router{
 		$this->getRoutes();
 	}
 	
-	private function getClass(){
-		return $this->class;
-	}
-
 	public function dispatch() {
 		$this->getController();
 
-		$controller = $this->class['controller'];
-		$action = $this->class['action'];
-		$params = $this->class['params'];
-		
-		$class = $controller."_controller";
-		$controller = new $class();
+        $controller = $this->class['controller'];
+        $action = $this->class['action'];
+        $params = $this->class['params'];
+        
+        $class = $controller."_controller";
 
-		if(!is_callable(array($controller,$action))) {
-			$this->notFound();
-		}
+        // FIXME: $params must have a array with all the params
+        $this->parts = array_pad($this->parts, - (count($this->parts) + 1), $params);
+        array_reverse($this->parts, true); // reverse the order of the variables
+        
+        $reflection_class = new ReflectionClass($class);
+        $controller = $reflection_class->newInstanceArgs(array()); // FIXME: how get the construct params?
 
-		$controller->action = $action;
-		$controller->params = $params;
+        if(!is_callable(array($controller,$action))) {
+                $this->notFound();
+        }
+        
+        $controller->params = $this->parts;
+        
+        $controller->action = $action;
 
-		if($params){
-			//Maybe we want more parameters
-			$extra_params = '';
-			foreach($this->parts as $param){
-				$extra_params .= ", '$param'";			
-			}
-			
-			$exec = "\$controller->".$action."('".$params."'".$extra_params.");";
-			eval($exec);
-		}else{
-			$controller->$action();
-		}
+        call_user_func_array(array($controller, $controller->action), $controller->params);
 	}
 	
 	private function getController(){
@@ -118,6 +128,37 @@ class Router{
 	private function notFound($error="") {
 		header('HTTP/1.0 404 Not Found');
 		header('Content-Type: text/html; charset=utf-8');
+
+		$path = Absolute_Path.APPDIR.DIRSEP."views/errors/404.php";
+
+		// if controller Errors exists
+		if($this->controllerExists("errors")){
+
+			// Create Errors_controller by reflection
+			$reflection_class = new ReflectionClass("errors_controller");
+	        $controller = $reflection_class->newInstanceArgs(array()); 
+
+	        // Call method index of Errors controller
+			if(is_callable(array($controller, "index"))) {
+		        $controller->params = array(404, "Controller action Not Found");
+		        $controller->action = "index";
+		        call_user_func_array(array($controller, $controller->action), $controller->params);
+
+		        exit;
+		    }
+
+		// ... if not and view errors/404.php exists
+    	} elseif(file_exists($path)){
+			ob_start();
+			include ($path);
+			$contents = ob_get_contents();
+			ob_end_clean();
+			echo $contents;
+		
+			exit;
+		}
+
+		// Just die with a 404 text
 		die("404 Controller action Not Found");
 	}
 
@@ -169,26 +210,7 @@ class Router{
 					}
 				}
 			}
-		}
-
-		/*
-		 * Generador del relativePath a la carpeta "app" para utilizar desde las views
-		 * genera algo así: ../../../app/folder/folder/folder/...etc/
-		 */
-		$relativePath = "";
-		$relative = substr_count(trim($this->uri,"/")."/","/");
-
-		if(substr($this->route,-1,1) == "/"){
-			$offset = 0;
-		}else{
-			$offset = 1;
-		}
-
-		for($c=0;$c<$relative-$offset;$c++){
-			$relativePath .= "../";
-		}
-		
-		define("relativePathToApp",$relativePath);
+		}		
 	}
 
 	private function controllerExists($controller){
@@ -214,3 +236,4 @@ class Router{
 		$this->routes[$target] = $GET;
 	}
 }
+?>

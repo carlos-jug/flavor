@@ -1,6 +1,6 @@
 <?php
 
-class Html extends Singleton {
+class html extends singleton {
 
 	protected $registry;
 	protected $validateErrors;
@@ -17,7 +17,7 @@ class Html extends Singleton {
 		$this->type= "themes/".$this->type;
 	}
 
-	public static function getInstance() {
+	public static function getInstance($class = null) {
 		return parent::getInstance(get_class());
 	}
 
@@ -63,8 +63,8 @@ class Html extends Singleton {
 		$js .= $this->includeJs("facebox");
 		$js .= "\t<script type=\"text/javascript\">\n";
 		$js .= "\t	jQuery(document).ready(function($) {\n";
-		$js .= "\t	  $('a[rel*=facebox]').facebox(); \n";
-		$js .= "\t	});\n";
+		$js .= "\t	  $('a[rel*=facebox]').facebox() \n";
+		$js .= "\t	})\n";
 	  	$js .= "\t</script>\n";
 		return $js;
 	}
@@ -144,13 +144,17 @@ class Html extends Singleton {
 		return $html;
 	}
 
-	public function linkToConfirm($text, $url=""){
-		$html = $this->linkTo($text, $url, "onclick=\"return confirm('Are you sure?');\"");
+	public function linkToConfirm($text, $url="", $html_attributes=""){
+		$html = $this->linkTo($text, $url, "$html_attributes onclick=\"return confirm('¿Estás seguro??');\"");
 		return $html;
 	}
 
 	public function image($name, $alt=""){
 		return "<img src=\"".$this->path.'app/'.$this->type."/images/".$name."\" alt=\"".$alt."\" title=\"".$alt."\" />";
+	}
+
+	public function imageAbsolute($name, $alt="", $html_attributes = ""){
+		return "<img src=\"".$name."\" alt=\"".$alt."\" title=\"".$alt."\" $html_attributes />";
 	}
 
 	public function imageLink($text, $url="", $html_attributes="", $name, $alt=""){
@@ -164,22 +168,17 @@ class Html extends Singleton {
 	}
 
 	public function imageLinkConfirm($text, $url="", $name, $alt=""){
-		$html = $this->imageLink($text,$url,"onclick=\"return confirm('Are you sure?');\"",$name,$alt);
+		$html = $this->imageLink($text,$url,"onclick=\"return confirm('¿Estás seguro??');\"",$name,$alt);
 		return $html;
 	}
 
-	public function checkBox($name, $value = null, $html_attributes=""){
-		$html = "<input type=\"checkbox\" name=\"".$name."\" value=\"$value\"";
+	public function checkBox($name, $html_attributes=""){
+		$html = "<input type=\"checkbox\" name=\"".$name."\"";
 		$html .= $html_attributes;
 		$html .= " />\n";
 		return $html;
 	}
-	
-        public function fileField($name, $value="", $html_attributes = ""){
-            $html = "<input type=\"file\" name=\"{$name}\" value=\"{$value}\" {$html_attributes} />";
-            return $html;
-        }
-
+		
 	public function radioButton($name, $value, $html_attributes=""){
 		$html = "<input type=\"radio\" value=\"".$value."\" name=\"".$name."\" ";
 		$html .= $html_attributes;
@@ -187,8 +186,8 @@ class Html extends Singleton {
 		return $html;
 	}
 	
-	public function textField($name, $value = null,  $html_attributes=""){
-		$html = "<input type=\"text\" name=\"".$name."\" id=\"".$name."\" value=\"".$value."\" ";
+	public function textField($name, $value="", $html_attributes=""){
+		$html = "<input type=\"text\" name=\"".$name."\" id=\"".$name."\" value=\"$value\" ";
 		$html .= $html_attributes;
 		$html .= " />";
 		return $html;
@@ -203,27 +202,29 @@ class Html extends Singleton {
 		return $html;
 	}
 	
-	public function hiddenField($name, $value = null, $html_attributes=""){
+	public function hiddenField($name, $value= "", $html_attributes=""){
 		$html = "<input type=\"hidden\" name=\"".$name."\" value=\"$value\"";
 		$html .= $html_attributes;
 		$html .= " />";
 		return $html;
 	}
 	
-	public function passwordField($name, $value = null, $html_attributes=""){
-		$html = "<input type=\"password\" name=\"".$name."\" value=\"$value\"";
+	public function passwordField($name, $value, $html_attributes=""){
+		$html = "<input type=\"password\" name=\"".$name."\" value=\"$value\" ";
 		$html .= $html_attributes;
 		$html .= " />";
 		return $html;
 	}
-	
-	public function select($name, $values, $selected=""){
-		$html = "<select name=\"".$name."\">\n";
+
+	public function select($name, $values, $selected="", $numericKey=false, $html_attributes="") {
+		$html = "<select class=\"element\" name=\"".$name."\" ".$html_attributes.">\n";
 		foreach ($values as $key=>$value){
 			$html .= "\t<option ";
-//			if (is_numeric($key)){
-//				$key = $value;
-//			}
+			if (!$numericKey) {
+				if (is_numeric($key)){
+					$key = $value;
+				}
+			}
 			$html .= " value=\"$key\"";
 			if($selected==$key){
 				$html .= " selected=\"selected\"";
@@ -233,8 +234,8 @@ class Html extends Singleton {
 		$html .= "</select>\n";
 		return $html;
 	}
-	
-	// Function to create a html select component from a model result.
+        
+    // Function to create a html select component from a model result.
     public function selectFromModel($name, $items, $selected="", $descriptionKey=NULL, $valueKey=NULL, $htmlAttributs = ""){
         $html = "<select name=\"".$name."\" $htmlAttributs>\n";
         foreach ($items as $key => $item){
@@ -439,4 +440,6 @@ class Html extends Singleton {
 		}
 		return $end_num;
 	}
+	
+	
 }

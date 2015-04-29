@@ -1,10 +1,24 @@
 <?php
-/*
-	Class name: Themes
-	Class autor: Victor De la Rocha http//mis-algoritmos.com/themes-class
-	Email: vyk2rr [at] gmail [dot] com
-*/
-class Themes{
+ /* ===========================
+
+  FlavorPHP - because php should have a better taste
+  homepage: http://www.flavorphp.com/
+  git repository: https://github.com/Axloters/FlavorPHP
+
+  FlavorPHP is a free software licensed under the MIT license
+  Copyright (C) 2008 by Pedro Santana <contacto at pedrosantana dot mx>
+  
+  Team:
+  	Pedro Santana
+	Victor Bracco
+	Victor de la Rocha
+	Jorge Condomí
+	Aaron Munguia
+
+  =========================== */
+?>
+<?php
+class themes{
 	protected $registry;
 	protected $path;
 	protected $l10n;

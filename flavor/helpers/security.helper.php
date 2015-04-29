@@ -1,6 +1,25 @@
 <?php
+ /* ===========================
 
-class Security extends Singleton {
+  FlavorPHP - because php should have a better taste
+  homepage: http://www.flavorphp.com/
+  git repository: https://github.com/Axloters/FlavorPHP
+
+  FlavorPHP is a free software licensed under the MIT license
+  Copyright (C) 2008 by Pedro Santana <contacto at pedrosantana dot mx>
+  
+  Team:
+  	Pedro Santana
+	Victor Bracco
+	Victor de la Rocha
+	Jorge Condomí
+	Aaron Munguia
+
+  =========================== */
+?>
+<?php
+
+class security extends singleton {
 	
 	private $validTags;
 	private $badAtributes = 'javascript:|onclick|ondblclick|onmousedown|onmouseup|onmouseover|onmousemove|onmouseout|onkeypress|onkeydown|onkeyup';
@@ -45,3 +64,4 @@ class Security extends Singleton {
 		return $sourceTag;
 	}
 }
+?>

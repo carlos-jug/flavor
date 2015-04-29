@@ -1,4 +1,23 @@
 <?php
+ /* ===========================
+
+  FlavorPHP - because php should have a better taste
+  homepage: http://www.flavorphp.com/
+  git repository: https://github.com/Axloters/FlavorPHP
+
+  FlavorPHP is a free software licensed under the MIT license
+  Copyright (C) 2008 by Pedro Santana <contacto at pedrosantana dot mx>
+  
+  Team:
+  	Pedro Santana
+	Victor Bracco
+	Victor de la Rocha
+	Jorge Condom�
+	Aaron Munguia
+
+  =========================== */
+?>
+<?php
 /**
  * Debug class
  * 
@@ -10,7 +29,7 @@
  * @package debug
  **/
 
-class Debug extends Singleton{
+class debug extends singleton{
 	/**
 	 * Va guardando la informacion que el desarrollador va enviando usando $debug->log(...);
 	 *
@@ -30,7 +49,7 @@ class Debug extends Singleton{
 		
 	}
 	
-	public static function getInstance() {
+	public static function getInstance($class = null) {
 		return parent::getInstance(get_class());
 	}
 	

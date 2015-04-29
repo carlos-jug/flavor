@@ -1,10 +1,29 @@
 <?php
+ /* ===========================
 
-class Mysqli_db extends Singleton implements Data {
+  FlavorPHP - because php should have a better taste
+  homepage: http://www.flavorphp.com/
+  git repository: https://github.com/Axloters/FlavorPHP
 
-	private $connectionId;
-	private $query_result;
-	private $transaction = false;
+  FlavorPHP is a free software licensed under the MIT license
+  Copyright (C) 2008 by Pedro Santana <contacto at pedrosantana dot mx>
+  
+  Team:
+  	Pedro Santana
+	Victor Bracco
+	Victor de la Rocha
+	Jorge Condom�
+	Aaron Munguia
+
+  =========================== */
+?>
+<?php
+
+class mysqli_db extends singleton implements data {
+
+	protected $connectionId;
+	protected $query_result;
+	protected $transaction = false;
 	
 	protected function __construct() {
 		$this->dbServer = DB_Server . ((DB_Port) ? ':' . DB_Port : '');
@@ -20,7 +39,7 @@ class Mysqli_db extends Singleton implements Data {
 		}
 	}
 	
-	public static function getInstance() {
+	public static function getInstance($class = null) {
 		return parent::getInstance(get_class());
 	}
 			
@@ -103,7 +122,7 @@ class Mysqli_db extends Singleton implements Data {
 	
 	public function numRows() {
 		$re = @mysqli_num_rows($this->query_result);
-		if (!$re) {
+		if ($re === false) {
 			throw new Exception($this->errorInfo());
 		}
 		return $re;
@@ -111,7 +130,7 @@ class Mysqli_db extends Singleton implements Data {
 	
 	function affectedRows() {
 		$re = ($this->connectionId) ? @mysqli_affected_rows($this->connectionId) : false;
-		if (!$re) {
+		if ($re === false) {
 			throw new Exception($this->errorInfo());
 		}
 		return $re;
@@ -141,3 +160,4 @@ class Mysqli_db extends Singleton implements Data {
 	}
 
 }
+?>
