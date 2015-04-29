@@ -305,5 +305,15 @@ class activeRecord implements ArrayAccess {
 	public function sql_escape($msg){
 		return $this->db->sql_escape($msg);
 	}
+    
+    public function get_all_order($key=null, $fields=NULL, $order=NULL ,$limit=NULL, $extra=NULL){
+        if(!$key)
+            $key=$this->keyField;
+        $return=array();
+        foreach ($this->findAll($fields=NULL, $order=NULL ,$limit=NULL, $extra=NULL) as $value) {
+            $return[$value[$key]]=$value;
+        }
+        return $return;
+    }
 }
 ?>
